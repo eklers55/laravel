@@ -66,7 +66,6 @@ class PostsController extends Controller
        $post->user_id=auth()->user()->id;
        $post->cover_image = $fileNameToStore;
        $post->save();
-       activity()->log('New Post Created!');
        return redirect('/posts')->with('success', 'Post Created');
        
     } //
