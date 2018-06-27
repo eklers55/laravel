@@ -37,4 +37,4 @@ Route::get('/streams/index', 'StreamController@index')->middleware('auth');
 Route::get('/streams', 'StreamController@index')->middleware('auth');
 
 
-Route::get('lang/{locale}','LanguageController');
+Route::get('lang/{lang}', ['as'=>'lang.switch', 'uses'=>'LanguageController@switchLang']);
