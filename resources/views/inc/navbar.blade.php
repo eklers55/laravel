@@ -19,11 +19,11 @@
             
                   <nav class="my-2 my-md-0 mr-md-3">
                     
-                    <a class="p-2 text-dark" href="/posts">Blog</a>
-                    <a class="p-2 text-dark" href="/about">About</a>
-                    <a class="p-2 text-dark" href="/services">Services</a>
-                    <a class="p-2 text-dark" href="/cont">Contacts</a>
-                    <a class="p-2 text-dark" href="/streams">Streams</a>
+                    <a class="p-2 text-dark" href="/posts">@lang('messages.blog')</a>
+                    <a class="p-2 text-dark" href="/about">@lang('messages.about')</a>
+                    <a class="p-2 text-dark" href="/services">@lang('messages.services')</a>
+                    <a class="p-2 text-dark" href="/cont">@lang('messages.contacts')</a>
+                    <a class="p-2 text-dark" href="/streams">@lang('messages.streams')</a>
                   </nav>
                   <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -45,10 +45,10 @@
                   <!-- Authentication Links -->
                   @guest
                       <li class="nav-item">
-                          <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                          <a class="nav-link" href="{{ route('login') }}">{{ __('messages.login') }}</a>
                       </li>
                       <li class="nav-item">
-                          <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                          <a class="nav-link" href="{{ route('register') }}">{{ __('messages.register') }}</a>
                       </li>
                   @else
                       <li class="nav-item dropdown">
