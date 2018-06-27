@@ -20,6 +20,7 @@ Route::get('/', 'PagesController@index');
 Route::get('/about', 'PagesController@about');
 Route::get('/services', 'PagesController@services');
 Route::get('/cont', 'PagesController@cont');
+//rss
 Route::get('feed', 'PostsController@render');
 
 Route::resource('posts','PostsController');
@@ -35,7 +36,7 @@ Route::get('/streams/create', 'StreamController@create')->middleware('subscriber
 Route::get('/streams/edit', 'StreamController@edit')->middleware('subscriber');
 Route::get('/streams/index', 'StreamController@index')->middleware('auth');
 Route::get('/streams', 'StreamController@index')->middleware('auth');
-//RSS
+
 
 //LANG
 Route::get('lang/{lang}', ['as'=>'lang.switch', 'uses'=>'LanguageController@switchLang']);
