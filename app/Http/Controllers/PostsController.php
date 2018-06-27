@@ -45,28 +45,28 @@ class PostsController extends Controller
            'body'=>'required',
            'cover_image' =>'image|nullable|mimes:jpeg,jpg,png|max:1999'
        ]);
-                 // Handle File Upload
+                 // failu upload
                  if($request->hasFile('cover_image')){
-                    // Get filename with the extension
+                    // iegutfailu ar extension
                     $filenameWithExt = $request->file('cover_image')->getClientOriginalName();
-                    // Get just filename
+                    // iegut tikai faila nosakumu
                     $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-                    // Get just ext
+                    // tikai ext
                     $extension = $request->file('cover_image')->getClientOriginalExtension();
-                    // Filename to store
+                    // glabat failu
                     $fileNameToStore= $filename.'_'.time().'.'.$extension;
-                    // Upload Image
+                    // upload attels
                     $path = $request->file('cover_image')->storeAs('public/cover_images', $fileNameToStore);
                 } else {
                     $fileNameToStore = 'noimage.jpg';
                 }
        $post = new Post;
-       $post->title = $request->input('title');
+       $post->title = $request->input('title'); //ievade
        $post->body = $request->input('body');
        $post->user_id=auth()->user()->id;
        $post->cover_image = $fileNameToStore;
        $post->save();
-       return redirect('/posts')->with('success', 'Post Created');
+       return redirect('/posts')->with('success', 'Post Created'); //atgriez atpakal
        
     } //
 
@@ -113,17 +113,17 @@ class PostsController extends Controller
 
         ]);
 
-         // Handle File Upload
+         // failu upload
          if($request->hasFile('cover_image')){
-            // Get filename with the extension
+            // iegutfailu ar extension
             $filenameWithExt = $request->file('cover_image')->getClientOriginalName();
-            // Get just filename
+            // iegut tikai faila nosakumu
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-            // Get just ext
+            // tikai ext
             $extension = $request->file('cover_image')->getClientOriginalExtension();
-            // Filename to store
+            // glabat failu
             $fileNameToStore= $filename.'_'.time().'.'.$extension;
-            // Upload Image
+            // upload attelu
             $path = $request->file('cover_image')->storeAs('public/cover_images', $fileNameToStore);
         
         }
@@ -132,7 +132,7 @@ class PostsController extends Controller
         $post->title = $request->input('title');
         $post->body = $request->input('body');
     
-        if ($request->hasFile('cover_image')) {
+        if ($request->hasFile('cover_image')) { //ja ir attels uzliek to, citadi liek defaulto attelu
             Storage::delete('public/cover_images/' . $post->cover_image); 
             $post->cover_image = $fileNameToStore;
         }
@@ -148,16 +148,52 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-        $post = Post::find($id);
+        $post = Post::find($id);  //parbauda editu, vai pareizais lietotajs edito
         if(auth()->user()->id !=$post->user_id){
             return redirect('/posts')->with('error', 'Unauthorized Page');
         }
 
         if($post->cover_image != 'noimage.jpg'){
-            // Delete Image
+            // dzes attelu ja dzes postu
             Storage::delete('public/cover_images/'. $post->cover_image);
         }
         $post->delete();
         return redirect('/posts')->with('success', 'Post Removed');
     }
+
+
+    public function render()
+    {
+        /* create new feed */
+    $feed = \App::make("feed");
+     /* cache the feed for 60 minutes */
+    $feed->setCache(60);
+ 
+    if (!$feed->isCached())
+    {
+    /* creating rss feed with our most recent 10 posts */
+    $posts = \DB::table('posts')->orderBy('created_at', 'desc')->take(10)->get();
+ 
+ 
+    /* set your feed's title, description, link, pubdate and language */
+    $feed->title = 'Hello';
+    $feed->description = 'Investmentnovel';
+    $feed->logo = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkFjWxD55d3iK3CiSDDwH098fOEBIS7BilclaHwpjWt0Z0hTJDgQ';
+    $feed->link = url('feed');
+    $feed->setDateFormat('datetime');
+    $feed->pubdate = $posts[0]->created_at;
+    $feed->lang = 'en';
+    $feed->setShortening(true);
+    $feed->setTextLimit(100);
+
+ 
+    foreach ($posts as $post)
+    {
+        $feed->add($post->title, \URL::to($post->title), $post->created_at, $post->body);
+    }
+ 
+  }
+    return $feed->render('atom');
+ }
+    
 }
