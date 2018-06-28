@@ -34,8 +34,8 @@ Route::get('/posts/create', 'PostsController@create')->middleware('administrator
 //streams
 Route::get('/streams/create', 'StreamController@create')->middleware('subscriber');
 Route::get('/streams/edit', 'StreamController@edit')->middleware('subscriber');
-Route::get('/streams/index', 'StreamController@index')->middleware('auth');
-Route::get('/streams', 'StreamController@index')->middleware('auth');
+Route::get('/streams/index', 'StreamController@index');
+Route::get('/streams', 'StreamController@index');
 
 
 //LANG
